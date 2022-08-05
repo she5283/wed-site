@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.example.demo.dao.BoardDao">
+	<select id="findAll" resultType="com.example.demo.dto.BoardDto$ListDto">
+		select bno, title, writer, readCnt from board order by bno desc
+	</select>
+	
+	<select id="findById" resultType="com.example.demo.dto.BoardDto$ReadDto">
+		select bno, title, content, writer, readCnt, writeTime from board where bno=#{bno}
+	</select>
+	
+	<insert id="save">
+		<selectKey resultType="int" keyProperty="bno" order="BEFORE">
+			select max(bno)+1 from board
+		</selectKey>
+		insert into board(bno, title, content, writer, password) 
+		values(#{bno}, #{title}, #{content}, #{writer}, #{password})
+	</insert>
+	
+	<update id="update">
+		update board set title=#{title}, content=#{content} where bno=#{bno}
+	</update>
+	
+	<delete id="deleteById">
+		delete from board where bno=#{bno}
+	</delete>
+	
+	<update id="increaseReadCnt">
+		update board set readCnt=readCnt+1 where bno=#{bno}
+	</update>
+	
+	<select id="findPassword" resultType="String">
+		select password from board where bno=#{bno}
+	</select>
+</mapper>
